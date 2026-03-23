@@ -5,6 +5,8 @@ import MetricsPanel from './components/MetricsPanel';
 import ChatInterface from './components/ChatInterface';
 import LogsViewer from './components/LogsViewer';
 import { LayoutDashboard, AlertCircle, Shield, Settings, Menu } from 'lucide-react';
+import { API_BASE_URL } from './config';
+
 
 const App = () => {
   const [metrics, setMetrics] = useState(null);
@@ -15,9 +17,10 @@ const App = () => {
     const fetchData = async () => {
       try {
         const [metricsRes, logsRes] = await Promise.all([
-          axios.get('http://localhost:8000/api/metrics'),
-          axios.get('http://localhost:8000/api/logs')
+          axios.get(`${API_BASE_URL}/api/metrics`),
+          axios.get(`${API_BASE_URL}/api/logs`)
         ]);
+
         setMetrics(metricsRes.data);
         setLogs(logsRes.data);
       } catch (err) {

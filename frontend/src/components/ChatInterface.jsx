@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Loader2, Command } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
+
 
 const ChatInterface = () => {
   const [messages, setMessages] = useState([
@@ -26,10 +28,11 @@ const ChatInterface = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:8000/api/chat', {
+      const response = await axios.post(`${API_BASE_URL}/api/chat`, {
         messages: [...messages, userMsg],
         stream: false
       });
+
       
       setMessages(prev => [...prev, { role: 'assistant', content: response.data.content }]);
     } catch (err) {
