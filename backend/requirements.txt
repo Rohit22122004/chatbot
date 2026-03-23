@@ -9,3 +9,5 @@ pydantic
 python-multipart
 pandas
 numpy
+langchain-groq
+langchain-openai

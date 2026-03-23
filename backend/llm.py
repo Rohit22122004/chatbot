@@ -6,14 +6,33 @@ from typing import List
 
 class LLMManager:
     def __init__(self, model_name=None, base_url=None):
-        self.model_name = model_name or os.getenv("OLLAMA_MODEL", "llama3")
-        self.base_url = base_url or os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+        groq_api_key = os.getenv("GROQ_API_KEY")
+        openai_api_key = os.getenv("OPENAI_API_KEY")
         
-        self.llm = ChatOllama(
-            model=self.model_name,
-            base_url=self.base_url,
-            temperature=0.2,
-        )
+        if groq_api_key:
+            from langchain_groq import ChatGroq
+            self.model_name = model_name or os.getenv("GROQ_MODEL", "llama3-8b-8192")
+            self.llm = ChatGroq(
+                model_name=self.model_name,
+                groq_api_key=groq_api_key,
+                temperature=0.2
+            )
+        elif openai_api_key:
+            from langchain_openai import ChatOpenAI
+            self.model_name = model_name or os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
+            self.llm = ChatOpenAI(
+                model_name=self.model_name,
+                openai_api_key=openai_api_key,
+                temperature=0.2
+            )
+        else:
+            self.model_name = model_name or os.getenv("OLLAMA_MODEL", "llama3")
+            self.base_url = base_url or os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+            self.llm = ChatOllama(
+                model=self.model_name,
+                base_url=self.base_url,
+                temperature=0.2,
+            )
         self.system_prompt = (
             "You are an AI SRE/DevOps Assistant for infrastructure support. "
             "Your goal is to help users troubleshoot and resolve real-time infrastructure issues. "
